@@ -19,7 +19,7 @@ body{background:#fff;color:#090909;font-family:Arial,Helvetica,sans-serif;displa
 .note{text-align:center;font-size:13px;color:#555;padding:0 16px 18px}
 </style></head><body>
 <div class="bar"><h1>Heita Microbit <span style="font-weight:400;color:#555">· Township edition · 20 micro:bit projects</span></h1>
-<span><a href="/">Circuit Kids home</a><a href="/book/ingwane/">Ingwane</a></span></div>
+<span><a href="/">Circuit Kids home</a><a href="/book/ingwane/">Octo</a></span></div>
 <div id="stage"><div id="book"></div></div>
 <div class="ctl"><button id="prev" aria-label="Previous page">&#8249;</button><span id="cnt">Cover</span><button id="next" aria-label="Next page">&#8250;</button></div>
 
@@ -52,3 +52,4 @@ document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')pf.flipN
 around(0);upd();
 })();
 </script><script>window.TPARTS=[];document.getElementById("qr-download").onclick=async function(e){e.preventDefault();const files=["/book/heita-payload-0.js","/book/heita-payload-1.js","/book/heita-payload-2.js","/book/heita-payload-3.js","/book/heita-payload-4.js"];for(let i=0;i<files.length;i++){const r=await fetch(files[i]);if(!r.ok)throw new Error("PDF download failed");const t=await r.text();TPARTS[i]=t.slice(t.indexOf('="')+2,t.lastIndexOf('";'));}const raw=atob(TPARTS.join("")),arr=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);const u=URL.createObjectURL(new Blob([arr],{type:"application/pdf"}));const a=document.createElement("a");a.href=u;a.download="Heita-Microbit-Township-Edition.pdf";if(window.ckTrackDownload)window.ckTrackDownload(a.download,a);a.click();setTimeout(()=>URL.revokeObjectURL(u),60000)};</script></body></html>
+

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,"><title>Reader test: The Pack That Came Back</title>
+<style>
+:root{--bg:#fbf7f0;--fg:#2b2118;--ac:#9c5214;--bar:#fff}
+body.dark{--bg:#17130f;--fg:#e8dfd2;--bar:#241e18;--ac:#e8934a}
+body.sepia{--bg:#f1e4c8;--fg:#3b2f1e;--bar:#f7ecd6;--ac:#7a4210}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overscroll-behavior:none;touch-action:pan-y;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif}
+#top,#bot{position:fixed;left:0;right:0;display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--bar);z-index:5;border-color:rgba(0,0,0,.12)}
+#top{top:0;border-bottom:1px solid}#bot{bottom:0;border-top:1px solid;justify-content:space-between;font-size:13px}
+button{font:inherit;border:1px solid var(--ac);background:transparent;color:var(--fg);border-radius:8px;min-width:44px;height:40px}
+#ttl{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ac);font-weight:600}
+#stage,#viewer,#viewer *{touch-action:pan-y;overscroll-behavior:none}
+#stage{position:fixed;top:53px;bottom:44px;left:0;right:0}
+#viewer{height:100%;width:100%}
+#toc{position:fixed;top:53px;bottom:44px;left:0;width:82%;max-width:340px;background:var(--bar);overflow:auto;transform:translateX(-105%);transition:transform .2s;z-index:6;padding:8px;border-right:1px solid rgba(0,0,0,.2)}
+#toc.open{transform:none}
+#toc a{display:block;padding:12px 8px;color:var(--fg);text-decoration:none;border-bottom:1px solid rgba(0,0,0,.08)}
+#msg{position:fixed;top:50%;left:0;right:0;text-align:center;z-index:4}
+</style></head><body>
+<div id="top"><button id="tocb" aria-label="Chapters">☰</button><div id="ttl">The Pack That Came Back</div>
+<button id="sm" aria-label="Smaller text">A-</button><button id="lg" aria-label="Larger text">A+</button><button id="th" aria-label="Colours">◐</button></div>
+<div id="toc"></div><div id="stage"><div id="viewer"></div></div><div id="msg">Loading book (about 100 KB)…</div>
+<div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="nx" aria-label="Next page">›</button></div>
+<script src="vendor/jszip.min.js"></script><script src="vendor/epub.min.js"></script>
+<script>
+(function(){
+var KEY="pack-test:";var $=function(i){return document.getElementById(i)};
+var size=parseInt(localStorage.getItem(KEY+"size")||"110",10),theme=localStorage.getItem(KEY+"theme")||"light";
+var TH={light:["#fbf7f0","#2b2118","#9c5214"],sepia:["#f1e4c8","#3b2f1e","#7a4210"],dark:["#17130f","#e8dfd2","#e8934a"]};
+function applyTheme(){document.body.className=theme==="light"?"":theme;
+ if(window.rend){var c=TH[theme];
+ rend.themes.override("color",c[1]);rend.themes.override("background",c[0]);
+ rend.themes.default({"h1,h2,h3":{"color":c[2]+" !important"}});}}
+var book=ePub("pack-that-came-back.epub");
+window.rend=book.renderTo("viewer",{width:"100%",height:"100%",flow:"paginated",spread:"none"});
+rend.themes.fontSize(size+"%");
+rend.themes.default({"html":{"touch-action":"pan-y","overscroll-behavior":"none"},"body":{"touch-action":"pan-y","font-family":"Georgia,serif","line-height":"1.55","padding":"0 .3em .8em"},
+ "h1,h2,h3":{"color":TH[theme][2]+" !important","break-after":"avoid","page-break-after":"avoid","break-inside":"avoid"},".keep":{"break-inside":"avoid","page-break-inside":"avoid"}});
+var saved=localStorage.getItem(KEY+"cfi");
+rend.display(saved||undefined).then(function(){$("msg").style.display="none";applyTheme();});
+book.loaded.navigation.then(function(n){var t=$("toc");n.toc.forEach(function(c){var a=document.createElement("a");a.href="#";a.textContent=c.label.trim();
+ a.onclick=function(e){e.preventDefault();rend.display(c.href);t.classList.remove("open");};t.appendChild(a);});});
+book.ready.then(function(){return book.locations.generate(1600)}).then(function(){upd(rend.currentLocation())});
+function upd(loc){if(!loc||!loc.start)return;localStorage.setItem(KEY+"cfi",loc.start.cfi);
+ var p=book.locations.length()?Math.round(book.locations.percentageFromCfi(loc.start.cfi)*100):null;
+ $("pg").textContent=p===null?"":p+"% read";}
+rend.on("relocated",upd);
+$("nx").onclick=function(){rend.next()};$("pv").onclick=function(){rend.prev()};
+$("tocb").onclick=function(){$("toc").classList.toggle("open")};
+$("sm").onclick=function(){size=Math.max(80,size-10);rend.themes.fontSize(size+"%");localStorage.setItem(KEY+"size",size)};
+$("lg").onclick=function(){size=Math.min(200,size+10);rend.themes.fontSize(size+"%");localStorage.setItem(KEY+"size",size)};
+$("th").onclick=function(){theme={light:"sepia",sepia:"dark",dark:"light"}[theme];localStorage.setItem(KEY+"theme",theme);applyTheme()};
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")rend.next();if(e.key==="ArrowLeft")rend.prev();});
+rend.on("keydown",function(e){if(e.key==="ArrowRight")rend.next();if(e.key==="ArrowLeft")rend.prev();});
+var sx=null;rend.on("touchstart",function(e){sx=e.changedTouches[0].screenX});
+rend.on("touchend",function(e){if(sx===null)return;var dx=e.changedTouches[0].screenX-sx;if(Math.abs(dx)>50){dx<0?rend.next():rend.prev()}sx=null});
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
+})();
+</script></body></html>

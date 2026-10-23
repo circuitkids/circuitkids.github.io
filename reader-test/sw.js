@@ -1,3 +1,4 @@
-var C="pack-test-v1",F=["./","index.html","pack-that-came-back.epub","vendor/epub.min.js","vendor/jszip.min.js"];
+var C="ck-shelf-v2",F=["./","index.html","reader.html","pages.html","pack-that-came-back.epub","pack-cover.jpg","bc-cover.jpg","vendor/epub.min.js","vendor/jszip.min.js","bc/p-01.jpg","bc/p-02.jpg","bc/p-03.jpg","bc/p-04.jpg","bc/p-05.jpg","bc/p-06.jpg","bc/p-07.jpg","bc/p-08.jpg","bc/p-09.jpg","bc/p-10.jpg","bc/p-11.jpg","bc/p-12.jpg","bc/p-13.jpg","bc/p-14.jpg","bc/p-15.jpg","bc/p-16.jpg","bc/p-17.jpg","bc/p-18.jpg","bc/p-19.jpg","bc/p-20.jpg","bc/p-21.jpg","bc/p-22.jpg","bc/p-23.jpg"];
 self.addEventListener("install",function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(F)}));self.skipWaiting()});
-self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request)}))});
+self.addEventListener("activate",function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(n){return n!==C}).map(function(n){return caches.delete(n)}))}))});
+self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(function(r){return r||fetch(e.request)}))});

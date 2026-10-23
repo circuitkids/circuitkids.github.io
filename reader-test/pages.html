@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,"><title>The Butterfly Chase</title>
+<style>
+html,body{height:100%;margin:0;background:#fbf7f0;color:#2b2118;font-family:system-ui,sans-serif;overscroll-behavior:none;touch-action:pan-y}
+#top,#bot{position:fixed;left:0;right:0;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#fff;z-index:5;border-color:rgba(0,0,0,.12)}
+#top{top:0;border-bottom:1px solid}#bot{bottom:0;border-top:1px solid;justify-content:space-between;font-size:13px}
+a#home{color:#9c5214;text-decoration:none;font-size:14px;font-weight:600;padding:0 4px;white-space:nowrap}
+#ttl{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#9c5214;font-weight:600}
+button{font:inherit;border:1px solid #9c5214;background:transparent;color:#2b2118;border-radius:8px;min-width:44px;height:40px}
+#stage{position:fixed;top:53px;bottom:44px;left:0;right:0;display:flex;align-items:center;justify-content:center}
+#stage img{max-width:100%;max-height:100%;object-fit:contain}
+</style></head><body>
+<div id="top"><a id="home" href="./" aria-label="Back to shelf">‹ Shelf</a><div id="ttl">The Butterfly Chase</div></div>
+<div id="stage"><img id="im" alt="Story page"></div>
+<div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="nx" aria-label="Next page">›</button></div>
+<script>
+(function(){
+var N=23,KEY="ck:bc:",$=function(i){return document.getElementById(i)};
+var cur=Math.min(N,Math.max(1,parseInt(localStorage.getItem(KEY+"page")||"1",10)));
+function src(n){return "bc/p-"+(n<10?"0":"")+n+".jpg"}
+function show(n){cur=n;$("im").src=src(n);$("im").alt="Story page "+n+" of "+N;$("pg").textContent="Page "+n+" of "+N;
+ localStorage.setItem(KEY+"page",n);localStorage.setItem(KEY+"cfi","p"+n);localStorage.setItem(KEY+"pct",Math.round(n/N*100));
+ if(n<N)(new Image()).src=src(n+1);}
+$("nx").onclick=function(){if(cur<N)show(cur+1)};$("pv").onclick=function(){if(cur>1)show(cur-1)};
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")$("nx").click();if(e.key==="ArrowLeft")$("pv").click();});
+var sx=null;document.addEventListener("touchstart",function(e){sx=e.changedTouches[0].screenX});
+document.addEventListener("touchend",function(e){if(sx===null)return;var dx=e.changedTouches[0].screenX-sx;if(Math.abs(dx)>50){dx<0?$("nx").click():$("pv").click()}sx=null});
+show(cur);
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
+})();
+</script></body></html>

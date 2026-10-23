@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="data:,"><title>The Butterfly Chase</title>
+<link rel="icon" href="data:,"><title>Story</title>
 <style>
 html,body{height:100%;margin:0;background:#fbf7f0;color:#2b2118;font-family:system-ui,sans-serif;overscroll-behavior:none;touch-action:pan-y}
 #top,#bot{position:fixed;left:0;right:0;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#fff;z-index:5;border-color:rgba(0,0,0,.12)}
@@ -14,14 +14,17 @@ button{font:inherit;border:1px solid #9c5214;background:transparent;color:#2b211
 #stage{position:fixed;top:53px;bottom:44px;left:0;right:0;display:flex;align-items:center;justify-content:center}
 #stage img{max-width:100%;max-height:100%;object-fit:contain}
 </style></head><body>
-<div id="top"><a id="home" href="./" aria-label="Back to shelf">‹ Shelf</a><div id="ttl">The Butterfly Chase</div></div>
+<div id="top"><a id="home" href="./" aria-label="Back to shelf">‹ Shelf</a><div id="ttl"></div></div>
 <div id="stage"><img id="im" alt="Story page"></div>
 <div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="nx" aria-label="Next page">›</button></div>
 <script>
 (function(){
-var N=23,KEY="ck:bc:",$=function(i){return document.getElementById(i)};
+var BK={bc:{n:23,t:"The Butterfly Chase",d:"bc"},lr:{n:20,t:"The Last Refuge",d:"lr"}};
+var id=(location.search.match(/[?&]b=(\w+)/)||[])[1]||"bc";if(!BK[id])id="bc";var B=BK[id];
+var N=B.n,KEY="ck:"+id+":",$=function(i){return document.getElementById(i)};
+document.title=B.t;document.getElementById("ttl").textContent=B.t;
 var cur=Math.min(N,Math.max(1,parseInt(localStorage.getItem(KEY+"page")||"1",10)));
-function src(n){return "bc/p-"+(n<10?"0":"")+n+".jpg"}
+function src(n){return B.d+"/p-"+(n<10?"0":"")+n+".jpg"}
 function show(n){cur=n;$("im").src=src(n);$("im").alt="Story page "+n+" of "+N;$("pg").textContent="Page "+n+" of "+N;
  localStorage.setItem(KEY+"page",n);localStorage.setItem(KEY+"cfi","p"+n);localStorage.setItem(KEY+"pct",Math.round(n/N*100));
  if(n<N)(new Image()).src=src(n+1);}

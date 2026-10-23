@@ -16,7 +16,7 @@ header{padding:16px 16px 8px}h1{font-size:20px;margin:0;color:#9c5214}p.s{margin
 <header><h1>Circuit Kids bookshelf</h1><p class="s">Tap a cover to read. Test version.</p></header>
 <div id="shelf"></div>
 <script>
-var BOOKS=[{id:"pack",title:"The Pack That Came Back",author:"Mendi Taukwena",cover:"pack-cover.jpg",href:"reader.html?b=pack"},{id:"bc",title:"The Butterfly Chase",author:"Mendi Taukwena",cover:"bc-cover.jpg",href:"pages.html?b=bc"}];
+var BOOKS=[{id:"pack",title:"The Pack That Came Back",author:"Mendi Taukwena",cover:"pack-cover.jpg",href:"reader.html?b=pack"},{id:"lr",title:"The Last Refuge",author:"Mendi Taukwena",cover:"lr-cover.jpg",href:"pages.html?b=lr"},{id:"bc",title:"The Butterfly Chase",author:"Mendi Taukwena",cover:"bc-cover.jpg",href:"pages.html?b=bc"}];
 var sh=document.getElementById("shelf");
 BOOKS.forEach(function(b){var p=parseInt(localStorage.getItem("ck:"+b.id+":pct")||"0",10),has=!!localStorage.getItem("ck:"+b.id+":cfi");
  var a=document.createElement("a");a.className="b";a.href=b.href;

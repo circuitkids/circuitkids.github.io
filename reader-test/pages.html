@@ -13,13 +13,16 @@ a#home{color:#9c5214;text-decoration:none;font-size:14px;font-weight:600;padding
 button{font:inherit;border:1px solid #9c5214;background:transparent;color:#2b2118;border-radius:8px;min-width:44px;height:40px}
 #stage{position:fixed;top:53px;bottom:44px;left:0;right:0;display:flex;align-items:center;justify-content:center}
 #stage img{max-width:100%;max-height:100%;object-fit:contain}
+#zm{display:none}body.den #zm{display:inline-block}
+body.zoomed #stage{overflow:auto;align-items:flex-start;justify-content:flex-start;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+body.zoomed #stage img{max-width:none;max-height:none;width:160%;height:auto}
 </style></head><body>
 <div id="top"><a id="home" href="./" aria-label="Back to shelf">‹ Shelf</a><div id="ttl"></div></div>
 <div id="stage"><img id="im" alt="Story page"></div>
-<div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="nx" aria-label="Next page">›</button></div>
+<div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="zm" type="button" aria-pressed="false" aria-label="Zoom in to read the text">Zoom</button><button id="nx" aria-label="Next page">›</button></div>
 <script>
 (function(){
-var BK={bc:{n:23,t:"The Butterfly Chase",d:"bc"},lr:{n:20,t:"The Last Refuge",d:"lr"}};
+var BK={bc:{n:23,t:"The Butterfly Chase",d:"bc"},lr:{n:20,t:"The Last Refuge",d:"lr"},den:{n:100,t:"The Den",d:"den"}};
 var id=(location.search.match(/[?&]b=(\w+)/)||[])[1]||"bc";if(!BK[id])id="bc";var B=BK[id];
 var N=B.n,KEY="ck:"+id+":",$=function(i){return document.getElementById(i)};
 document.title=B.t;document.getElementById("ttl").textContent=B.t;
@@ -30,8 +33,13 @@ function show(n){cur=n;$("im").src=src(n);$("im").alt="Story page "+n+" of "+N;$
  if(n<N)(new Image()).src=src(n+1);}
 $("nx").onclick=function(){if(cur<N)show(cur+1)};$("pv").onclick=function(){if(cur>1)show(cur-1)};
 document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")$("nx").click();if(e.key==="ArrowLeft")$("pv").click();});
-var sx=null;document.addEventListener("touchstart",function(e){sx=e.changedTouches[0].screenX});
-document.addEventListener("touchend",function(e){if(sx===null)return;var dx=e.changedTouches[0].screenX-sx;if(Math.abs(dx)>50){dx<0?$("nx").click():$("pv").click()}sx=null});
+var sx=null;document.addEventListener("touchstart",function(e){sx=(id==="den"&&e.touches.length>1)?null:e.changedTouches[0].screenX;if(id==="den"&&e.touches.length>1)pinch=true});
+document.addEventListener("touchend",function(e){if(id==="den"&&e.touches.length===0&&pinch){pinch=false;sx=null;return}if(sx===null||(id==="den"&&(document.body.classList.contains("zoomed")||(window.visualViewport&&window.visualViewport.scale>1.02)))){sx=null;return}var dx=e.changedTouches[0].screenX-sx;if(Math.abs(dx)>50){dx<0?$("nx").click():$("pv").click()}sx=null});
+var pinch=false;
+if(id==="den"){document.body.className="den";document.documentElement.style.touchAction="pan-y pinch-zoom";document.body.style.touchAction="pan-y pinch-zoom";
+ $("zm").onclick=function(){var z=document.body.classList.toggle("zoomed");$("zm").setAttribute("aria-pressed",z);$("zm").textContent=z?"Fit":"Zoom";tz();};
+ function tz(){var s=$("stage");s.scrollTop=0;s.scrollLeft=document.body.classList.contains("zoomed")?Math.round(s.clientWidth*0.112):0;}
+ var _s=show;show=function(n){_s(n);tz();};}
 show(cur);
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
 })();

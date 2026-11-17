@@ -22,7 +22,7 @@ body.zoomed #stage img{max-width:none;max-height:none;width:160%;height:auto}
 <div id="bot"><button id="pv" aria-label="Previous page">‹</button><span id="pg"></span><button id="zm" type="button" aria-pressed="false" aria-label="Zoom in to read the text">Zoom</button><button id="nx" aria-label="Next page">›</button></div>
 <script>
 (function(){
-var BK={bc:{n:23,t:"The Butterfly Chase",d:"bc"},lr:{n:20,t:"The Last Refuge",d:"lr"},den:{n:100,t:"The Den",d:"den"}};
+var BK={bc:{n:23,t:"The Butterfly Chase",d:"bc"},lr:{n:20,t:"The Last Refuge",d:"lr"},den:{n:100,t:"The Den",d:"den"},mtl:{n:38,t:"The Mirror That Listens",d:"mtl"},m2:{n:39,t:"The Mirror That Gets It Wrong",d:"m2"},m3:{n:40,t:"The Mirror's Missing Faces",d:"m3"}};
 var id=(location.search.match(/[?&]b=(\w+)/)||[])[1]||"bc";if(!BK[id])id="bc";var B=BK[id];
 var N=B.n,KEY="ck:"+id+":",$=function(i){return document.getElementById(i)};
 document.title=B.t;document.getElementById("ttl").textContent=B.t;
